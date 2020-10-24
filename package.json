@@ -4,6 +4,7 @@
   "description": "This is a boilerplate project used for starting new projects!",
   "main": "src/server.js",
   "scripts": {
+    "knex":"knex",
     "start": "node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master",
