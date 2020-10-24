@@ -8,6 +8,7 @@ const { NODE_ENV } = require('./config');
 // ROUTES
 const authRouter = require('./auth/auth-router');
 const usersRouter = require("./users/users-router");
+const cellsRouter = require("./cells/cells-router");
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cors());
 
 app.use("/api/auth", authRouter)
 app.use("/api/users", usersRouter);
+app.use("/api/cells", cellsRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
