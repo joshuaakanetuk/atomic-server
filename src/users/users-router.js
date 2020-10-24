@@ -9,8 +9,8 @@ const { requireAuth } = require('../middleware/jwt-auth')
 // used to route user requests
 usersRouter
   .post("/", jsonBodyParser, (req, res, next) => {
-    const { password, user_name, full_name, email, type } = req.body;
-    for (const field of ["full_name", "user_name", "password", "email"])
+    const { password, user_name, full_name } = req.body;
+    for (const field of ["full_name", "user_name", "password"])
       if (!req.body[field]) {
         var errvar = '';
         switch(field) {
@@ -40,8 +40,7 @@ usersRouter
         return UsersService.hashPassword(password).then((hashedPassword) => {
           const newUser = {
             user_name,
-            type,
-            profile_image,
+            type: 'user',
             password: hashedPassword,
             full_name,
             date_created: "now()",
