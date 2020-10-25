@@ -34,15 +34,11 @@ const CellsService = {
         return rows[0]
       })
   },
-//   deleteCell(db, id) {
-//     return db.from('cells')
-//       .where({ id })
-//       .update(newNoteFields)
-//       .returning('*')
-//       .then(rows => {
-//         return rows[0]
-//       })
-//   },
+  deleteCell(db, id) {
+    return db.from('cells')
+      .where({ id })
+      .delete()
+  },
 };
 
 module.exports = CellsService;
