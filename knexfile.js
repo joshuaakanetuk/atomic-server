@@ -9,6 +9,13 @@ module.exports = {
       directory: "./seeds/",
     },
   },
+  production: {
+    client: "postgresql",
+    connection:  process.env.DATABASE_URL || 'postgresql://postgres@localhost/atomic',
+    seeds: {
+      directory: "./seeds/",
+    },
+  },
 
   // production: {
   //   client: "postgresql",
