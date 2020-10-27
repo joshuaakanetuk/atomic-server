@@ -9,9 +9,8 @@ const { requireAuth } = require("../middleware/jwt-auth");
 
 cellsRouter
   .route("/")
-    .all(requireAuth)
+  .all(requireAuth)
   .get((req, res, next) => {
-    console.log(req.user);
     if (req.user.type === 'user')
       CellsService.getCellsForUser(req.app.get("db"), req.user.id)
         .then((cell) => {
@@ -49,9 +48,8 @@ cellsRouter
     // validation for proper data model
     for (const [key, value] of Object.entries(newCell)) {
       if (value == null || value == undefined) {
-        console.log(key)
         return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` },
+          error: { message: `Missing ${key}` },
         });
       }
     }
@@ -104,7 +102,6 @@ cellsRouter
     newCell = keys;
 
     // Checking submitted object for length, user type
-
     const numberOfValues = Object.values(keys).filter(Boolean).length;
     if (numberOfValues === 0) {
       return res.status(400).json({
@@ -130,7 +127,27 @@ cellsRouter
         res.json(pp);
       })
       .catch(next);
-  });
+  })
+  .delete((req, res, next) => {
+    if(req.cell.user_id === req.user.id) {
+      CellsService.deleteCell(req.app.get("db"), req.params.cell_id)
+      .then((data) => {
+        res.status(204).json();
+      })
+      .catch((err) => {
+        return res.status(400).json({
+          error: err
+        })
+      })
+    }
+    else {
+      return res.status(400).json({
+        error: {
+          message: `Can't delete this cell!`
+        }
+      });
+    }
+  })
 
 
   async function checkCellExists(req, res, next) {

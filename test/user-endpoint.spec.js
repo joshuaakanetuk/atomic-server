@@ -6,7 +6,7 @@ const helpers = require("./test-helpers");
 describe("Users Endpoints", function () {
   let db;
 
-  const { testUsers, testProjects, testNotes } = helpers.makeProjectFixtures();
+  const { testUsers, testCells } = helpers.makeCellFixtures();
 
   before("make knex instance", () => {
     db = knex({
@@ -21,6 +21,24 @@ describe("Users Endpoints", function () {
   before("cleanup", () => helpers.cleanTables(db));
 
   afterEach("cleanup", () => helpers.cleanTables(db));
+
+  describe(`GET /api/users/:users_id`, () => {
+    before("insert users", () =>
+      helpers.seedCellTables(db, testUsers, testCells)
+    );
+
+    it(`retrives a user`, function () {
+      const testUser = testUsers[0];
+      return supertest(app)
+        .get(`/api/users/${testUser.id}`)
+        .set("Authorization", helpers.makeAuthHeader(testUser))
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.full_name).to.eql(testUser.full_name);
+          expect(res.body.profile_image).to.eql(testUser.profile_image);
+        });
+    });
+  });
 
   describe(`POST /api/users`, () => {
     it(`registers a user `, function () {
@@ -38,13 +56,13 @@ describe("Users Endpoints", function () {
         .send(testUser)
         .expect(201)
         .expect((res) => {
-            expect(res.body).to.have.property("id");
-            expect(res.body).to.have.property("date_created");
-            expect(res.body.profile_image).to.eql(testUser.profile_image);
-            expect(res.body.type).to.eql(testUser.type);
-            expect(res.body.full_name).to.eql(testUser.full_name);
-            expect(res.body.user_name).to.eql(testUser.user_name);
-          })
+          expect(res.body).to.have.property("id");
+          expect(res.body).to.have.property("date_created");
+          expect(res.body.profile_image).to.eql(testUser.profile_image);
+          expect(res.body.type).to.eql(testUser.type);
+          expect(res.body.full_name).to.eql(testUser.full_name);
+          expect(res.body.user_name).to.eql(testUser.user_name);
+        });
     });
   });
 });

@@ -6,7 +6,7 @@ const helpers = require("./test-helpers");
 describe("Auth Endpoints", function () {
   let db;
 
-  const { testUsers, testProjects, testNotes } = helpers.makeProjectFixtures();
+  const { testUsers, testCells } = helpers.makeCellFixtures();
 
   before("make knex instance", () => {
     db = knex({
@@ -24,12 +24,11 @@ describe("Auth Endpoints", function () {
 
   describe(`POST /api/auth/loguin`, () => {
     beforeEach("insert users", () =>
-      helpers.seedProjectTables(db, testUsers, testProjects)
+      helpers.seedCellTables(db, testUsers, testCells)
     );
 
     it(`logs in a user`, function () {
       const testUser = testUsers[1];
-
       return supertest(app)
         .post(`/api/auth/login`)
         .set("Authorization", helpers.makeAuthHeader(testUser))

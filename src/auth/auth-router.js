@@ -6,7 +6,6 @@ const authRouter = express.Router();
 const jsonBodyParser = express.json();
 
 // used for logging in users 
-
 authRouter.post("/login", jsonBodyParser, (req, res, next) => {
   const { user_name, password } = req.body;
   const loginUser = { user_name, password };

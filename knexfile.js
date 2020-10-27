@@ -16,16 +16,11 @@ module.exports = {
       directory: "./seeds/",
     },
   },
-
-  // production: {
-  //   client: "postgresql",
-  //   connection: {
-  //     database: "my_db",
-  //     user: "username",
-  //     password: "password",
-  //   },
-  //   migrations: {
-  //     tableName: "knex_migrations",
-  //   },
-  // },
+  testing: {
+    client: "postgresql",
+    connection:  process.env.TEST_DATABASE_URL || 'postgresql://postgres@localhost/atomic-test',
+    seeds: {
+      directory: "./seeds/",
+    },
+  },
 };

@@ -6,6 +6,8 @@
   "scripts": {
     "migrate":"knex migrate:latest",
     "migrate:down":"knex migrate:rollback",
+    "migrate:test":"knex migrate:latest --env testing",
+    "startdev": "knex migrate:latest && knex seed run",
     "start": "node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master",
