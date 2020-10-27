@@ -8,7 +8,10 @@ const CellsService = {
     return db.from("cells").select("*").where("cells.user_id", user_id);
   },
   getById(db, id) {
-    return db.from("cells").select("*").where("cells.id", id).first();
+    return db.from("cells")
+    .select("*")
+    .where("cells.id", id)
+    .first();
   },
   insertCell(db, newCell) {
     return db
@@ -30,7 +33,9 @@ const CellsService = {
       });
   },
   deleteCell(db, id) {
-    return db.from("cells").where({ id }).delete();
+    return db.from("cells")
+    .where({ id })
+    .delete()
   },
 };
 

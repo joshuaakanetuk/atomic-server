@@ -11,7 +11,7 @@ cellsRouter
   .route("/")
   .all(requireAuth)
   .get((req, res, next) => {
-    if (req.user.type === 'user')
+    if (req.user.type === "user")
       CellsService.getCellsForUser(req.app.get("db"), req.user.id)
         .then((cell) => {
           res.json(cell);
@@ -25,14 +25,7 @@ cellsRouter
         .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const {
-      type,
-      verb,
-      number,
-      unit,
-      forBool,
-      comment,
-    } = req.body;
+    const { type, verb, number, unit, forBool, comment } = req.body;
     const newCell = {
       id: uuidv4(),
       type,
@@ -64,7 +57,7 @@ cellsRouter
       .catch(next);
   });
 
-  cellsRouter
+cellsRouter
   .route("/:cell_id")
   .all(requireAuth)
   .all(checkCellExists)
@@ -118,54 +111,48 @@ cellsRouter
       newCell[key] === undefined ? delete newCell[key] : {}
     );
 
-    CellsService.updateCell(
-      req.app.get("db"),
-      req.params.cell_id,
-      newCell
-    )
+    CellsService.updateCell(req.app.get("db"), req.params.cell_id, newCell)
       .then((pp) => {
         res.json(pp);
       })
       .catch(next);
   })
   .delete((req, res, next) => {
-    if(req.cell.user_id === req.user.id) {
+    if (req.cell.user_id === req.user.id) {
       CellsService.deleteCell(req.app.get("db"), req.params.cell_id)
-      .then((data) => {
-        res.status(204).json();
-      })
-      .catch((err) => {
-        return res.status(400).json({
-          error: err
+        .then((data) => {
+          res.status(204).json();
         })
-      })
-    }
-    else {
+        .catch((err) => {
+          return res.status(400).json({
+            error: err,
+          });
+        });
+    } else {
       return res.status(400).json({
         error: {
-          message: `Can't delete this cell!`
-        }
+          message: `Can't delete this cell!`,
+        },
       });
     }
-  })
+  });
 
+async function checkCellExists(req, res, next) {
+  try {
+    const cell = await CellsService.getById(
+      req.app.get("db"),
+      req.params.cell_id
+    );
 
-  async function checkCellExists(req, res, next) {
-    try {
-      const cell = await CellsService.getById(
-        req.app.get("db"),
-        req.params.cell_id
-      );
-  
-      if (!cell)
-        return res.status(404).json({
-          error: `Cell doesn't exist`,
-        });
-      req.cell = cell;
-      next();
-    } catch (error) {
-      next(error);
-    }
+    if (!cell)
+      return res.status(404).json({
+        error: `Cell doesn't exist`,
+      });
+    req.cell = cell;
+    next();
+  } catch (error) {
+    next(error);
   }
+}
 
 module.exports = cellsRouter;
