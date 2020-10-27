@@ -30,7 +30,7 @@ describe("Users Endpoints", function () {
     it(`retrives a user`, function () {
       const testUser = testUsers[0];
       return supertest(app)
-        .get(`/api/users/${testUser.id}`)
+        .get(`/api/users/`)
         .set("Authorization", helpers.makeAuthHeader(testUser))
         .expect(200)
         .expect((res) => {
